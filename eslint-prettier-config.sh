@@ -15,7 +15,7 @@ NC='\033[0m' # No Color
 
 # Package Manager Prompt
 echo
-echo "Which package manager are you using?"
+echo "Which package manager are you using? (Recommendation: Yarn)"
 select package_command_choices in "Yarn" "npm" "Cancel"; do
   case $package_command_choices in
     Yarn ) pkg_cmd='yarn add'; break;;
@@ -26,7 +26,7 @@ done
 echo
 
 # File Format Prompt
-echo "Which ESLint and Prettier configuration format do you prefer?"
+echo "Which ESLint and Prettier configuration format do you prefer?  (Recommendation: json)"
 select config_extension in ".js" ".json" "Cancel"; do
   case $config_extension in
     .js ) config_opening='module.exports = {'; break;;
@@ -53,7 +53,7 @@ finished=false
 
 # Max Line Length Prompt
 while ! $finished; do
-  read -p "What max line length do you want to set for ESLint and Prettier? (Recommendation: 80)"
+  read -p "What max line length do you want to set for ESLint and Prettier? (Recommendation: 160)"
   if [[ $REPLY =~ ^[0-9]{2,3}$ ]]; then
     max_len_val=$REPLY
     finished=true
@@ -64,7 +64,7 @@ while ! $finished; do
 done
 
 # Trailing Commas Prompt
-echo "What style of trailing commas do you want to enforce with Prettier?"
+echo "What style of trailing commas do you want to enforce with Prettier?  (Recommendation: all)"
 echo -e "${YELLOW}>>>>> See https://prettier.io/docs/en/options.html#trailing-commas for more details.${NC}"
 select trailing_comma_pref in "none" "es5" "all"; do
   case $trailing_comma_pref in
@@ -136,6 +136,7 @@ else
   "rules": {
     "jsx-a11y/href-no-hash": ["off"],
     "react/jsx-filename-extension": ["warn", { "extensions": [".js", ".jsx"] }],
+    "react/state-in-constructor": ["never"],
     "max-len": [
       "warn",
       {
