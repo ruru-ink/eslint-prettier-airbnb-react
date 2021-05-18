@@ -121,11 +121,7 @@ else
   > ".eslintrc${config_extension}" # truncates existing file (or creates empty)
 
   echo ${config_opening}'
-  "extends": [
-    "airbnb",
-    "plugin:prettier/recommended",
-    "prettier/react"
-  ],
+  "extends": ["airbnb", "react-app", "prettier"],
   "env": {
     "browser": true,
     "commonjs": true,
@@ -133,16 +129,40 @@ else
     "jest": true,
     "node": true
   },
+  "plugins": ["prettier", "fp"],
   "rules": {
     "jsx-a11y/href-no-hash": ["off"],
+    "no-console": 0,
     "react/jsx-filename-extension": ["warn", { "extensions": [".js", ".jsx"] }],
-    "react/state-in-constructor": ["never"],
+    "react/state-in-constructor": [0],
+    "prettier/prettier": ["warn"],
+    // Below is the set of functional rules to warn developer about accidental mutations, which may cause error in reducers etc.
+    // No delete operator.
+    "fp/no-delete": "warn",
+    // Warning when Object.assign(a, b) used, since it mutates first argument. Object.assign({}, a, b) is ok.
+    "fp/no-mutating-assign": "warn",
+    // Warning when mutating method (pop, push, reverse, shift, sort, splice, unshift, etc) is used. Ramda and lodash/fp are allowed (_.pop, R.push)
+    "fp/no-mutating-methods": [
+      "warn",
+      {
+        "allowedObjects": ["_", "R", "history"]
+      }
+    ],
+    // Warning when mutating operators (++, --, etc) are used, object = {} also. `Component.propTypes`, `Component.defaultProps`, common.js (`module.exports`) and `ref.current` are ok.
+    "fp/no-mutation": [
+      "warn",
+      {
+        "commonjs": true,
+        "allowThis": true,
+        "exceptions": [{ "property": "propTypes" }, { "property": "defaultProps" }, { "property": "current" }]
+      }
+    ],
     "max-len": [
       "warn",
       {
-        "code": '${max_len_val}',
+        "code": 160,
         "tabWidth": 2,
-        "comments": '${max_len_val}',
+        "comments": 160,
         "ignoreComments": false,
         "ignoreTrailingComments": true,
         "ignoreUrls": true,
